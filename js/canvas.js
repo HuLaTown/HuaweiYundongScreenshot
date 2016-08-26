@@ -396,16 +396,6 @@ function drawHeader(cxt){
     cxt.textBaseline = "top";
     cxt.fillText("月统计", 313, 66);
 
-
-    //睡眠
-    cxt.beginPath();
-    var sleepBar = new Image();
-    sleepBar.src = "./images/sleepbar.png";
-    sleepBar.onload = function(){
-        cxt.drawImage(sleepBar, 0, 737);
-    };
-    
-
 }
 
 function genRandomStepData(num){
@@ -422,20 +412,13 @@ function genRandomStepData(num){
     return stepNumArray;
 }
 
-function drawStepChart(cxt){
-    var barColor = "#FF6185";
-    var barWidth = 9;
-    var barInterval = 16;
-    var barStartX = 123;
-    var barMaxY = 495;
-    var barBaseY = 675;
-
+function getDayNum(){
     var year = document.getElementById("year").value;
     var month = document.getElementById("month").value;
     var dayNum = 31;
-    if (month == 1||month == 3||month == 5||month == 7||month == 8||month == 10||month == 12){
+    if (month == '1'||month == '3'||month == '5'||month == '7'||month == '8'||month == '10'||month == '12'){
         dayNum = 31;
-    }else if(month == 4||month == 6||month == 9||month == 11){
+    }else if(month == '4'||month == '6'||month == '9'||month == '11'){
         dayNum = 30;
     }else{
         if(((year % 4)==0) && ((year % 100)!=0) || ((year % 400)==0)){
@@ -444,6 +427,18 @@ function drawStepChart(cxt){
             dayNum = 28;
         }
     }
+    return dayNum;
+}
+
+function drawStepChart(cxt){
+    var barColor = "#FF6185";
+    var barWidth = 9;
+    var barInterval = 16;
+    var barStartX = 123;
+    var barMaxY = 495;
+    var barBaseY = 675;
+
+    var dayNum = getDayNum();
 
     var stepNumArray = genRandomStepData(dayNum);
 //    var stepNumArray = new Array();
@@ -575,12 +570,54 @@ function drawDashLine(cxt, y){
 }
 */
 
+function drawSleepChart(cxt){
+    var dayNum = getDayNum();
+
+    //睡觉时间
+    cxt.beginPath();
+    var sleepbar = new Image();
+    sleepbar.src = "./images/sleepbar.png";
+    sleepbar.onload = function(){
+        cxt.drawImage(sleepbar, 0, 768);
+//    cxt.font ="lighter 22px _H_HelveticaNeue"; // iOS
+        cxt.font ="28px STHeitiSC-Light";  //TODO
+        cxt.fillStyle = "rgb(82,82,82)";
+        cxt.textAlign = "right";
+        cxt.textBaseline = "top";
+        cxt.fillText("平均值"+0+"小时"+"分钟",720,790);
+    };
+
+    //步数直方图
+    cxt.beginPath();
+    var stepsAxis = new Image();
+    stepsAxis.src = "./images/xaxis.png";
+    stepsAxis.onload = function(){
+        cxt.drawImage(stepsAxis, 0, 1039);
+    };
+
+    for (var i=0; i<dayNum; i++)
+    {
+        genVerticalDashline(cxt, i);
+    }
+}
+function genVerticalDashline(cxt,i){
+    var beginX=130;
+    var Y=910;
+    var width=16;
+    var line = new Image();
+    line.src = "./images/verticaldashline.png";
+    line.onload = function(){
+        cxt.drawImage(line, beginX+i*width, Y);
+    };
+}
+
 
 function putContentView(cxt){
 //    alert("呀");
 //    mainView(cxt);
     drawHeader(cxt);
     drawStepChart(cxt);
+    drawSleepChart(cxt);
 }
 
 // function putContentView(cxt){
