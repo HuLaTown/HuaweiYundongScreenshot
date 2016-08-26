@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>华为运动记录界面生成</title>
+    <link href="css/css.css" rel="stylesheet">
+    <link href="./css/css.css" rel="stylesheet" type="text/css"/>
+    <script src="./js/canvas.js"></script>
+    <script src="./js/loadImg.js"></script>
+</head>
+<body>
+    <section id="header">
+        <img src="images/bg.jpg" width="100%" height="200px">
+        <div id="headerText">
+            <header>
+                <h1>华为运动记录界面生成</h1>
+            </header>
+            <footer >
+                <a href="#input" style="text-decoration: none;background-color:floralwhite;padding: 10px;border-radius: 5px;">开始生成你的界面吧！</a>
+            </footer>
+        </div>
+    </section>
+    <section id="input">
+
+        <div class="chatRecord">
+            <!-- Chat1 -->
+            <div>
+                <label for="year">
+                    年份：
+                    <input id="year" type="number" value="2016"/>
+                </label>
+            </div>
+            <div>
+                <label for="month">
+                    月份：
+                    <input id="month" type="number" value="7"/>
+                </label>
+            </div>
+            <div>
+                <label for="hour">
+                    小时：
+                    <input id="hour" type="number" value="16"/>
+                </label>
+            </div>
+            <div>
+                <label for="minute">
+                    分钟：
+                    <input id="minute" type="number" value="31"/>
+                </label>
+            </div>
+            <div>
+                <label for="battery">
+                    电量：
+                    <input id="battery" type="number" value="87"/>
+                </label>
+            </div>
+            <div>
+                <label for="signal">
+                    信号：
+                    <input id="signal" type="number" value="4"/>
+                </label>
+            </div>
+        </div>
+        <div class="generate">
+            <div class="parameter">
+                <p style="font-size: 25px;text-align: center">几点注意：</p>
+                <ol type="A">
+                    <li>概不承担法律责任</li>
+                </ol>
+            </div>
+            <div class="Btn">
+                <span class="line line-top"></span>
+                <span class="line line-left"></span>
+                <span class="line line-right"></span>
+                <span class="line line-bottom"></span>
+                <input id="makeUpBtn" type="button" value="生成(随机数据)" onClick="putContentView(context)"/>
+            </div>
+        </div>
+    </section>
+    <section id="produce" style="text-align: center;">
+        <div class="Photo">
+            <h2 style="margin-top:20px; background:#CCCCCC;">生成图片区</h2>.
+            <div class="photo">
+                <canvas id="canvas">
+                    该浏览器暂不支持canvas！
+                </canvas>
+            </div>
+        </div>
+    </section>
+    <section id="footer">
+        <div class="footer">2015©<a href="http://ursb.me">Airing</div>
+    </section>
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        canvas.width = 750;
+        canvas.height = 1334;
+        var context = canvas.getContext("2d");
+        //putMainView(context);
+    </script>
+</body>
+</html>
