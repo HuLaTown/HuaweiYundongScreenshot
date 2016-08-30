@@ -501,7 +501,9 @@ function drawStepChart(cxt){
     var dashLineY = barBaseY - (avgStep / maxStep) * (barBaseY - barMaxY);
     drawDashLine(cxt, dashLineY);
 
+    
     //跑步最大值的小圆圈
+    cxt.beginPath();
     cxt.arc(barStartX + maxStepIndex*barInterval + 4, barMaxY, 4, 0, Math.PI*2, false);
     cxt.fillStyle = "#FFFFFF";
     cxt.fill();
@@ -511,6 +513,7 @@ function drawStepChart(cxt){
     cxt.stroke();
 
     //跑步最大值
+    cxt.beginPath();
     cxt.font ="24px STHeitiSC-Light";  //TODO
     cxt.fillStyle = "rgb(82,82,82)";
     cxt.textAlign = "left";
@@ -520,18 +523,19 @@ function drawStepChart(cxt){
 
 function drawDashLine(cxt, y){
     //虚线
-    var beginX = 35;
-    var dashWidht = 4;
-    var dashSpace = 1;
-    var endX = 713;
-
+    var beginX = 30;
+    var dashWidth = 4;
+    var dashInterval=5;
+    var endX = 720;
+/*
     cxt.beginPath();
     var leftNode = new Image();
     leftNode.src = "./images/dashleftnode.png";
     leftNode.onload = function(){
         cxt.drawImage(leftNode, 30, y-3);
     };
-
+    */
+/*
     cxt.beginPath();
     var dashline = new Image();
     dashline.src = "./images/dashline.png";
@@ -541,13 +545,24 @@ function drawDashLine(cxt, y){
         cxt.drawImage(dashline, 40, y);
         cxt.restore();
     };
+    */
 
+    for(var x=beginX;x<endX;x=x+dashInterval){
+        cxt.beginPath();
+        cxt.lineWidth = 1;
+        cxt.strokeStyle = "rgb(220,220,220)";
+        cxt.moveTo(x, y);
+        cxt.lineTo(x+dashWidth, y);
+        cxt.stroke();
+    }
+/*
     cxt.beginPath();
     var rightNode = new Image();
     rightNode.src = "./images/dashrightnode.png";
     rightNode.onload = function(){
         cxt.drawImage(rightNode, 713, y-3);
     };
+    */
 }
 /*
 function drawDashLine(cxt, y){
@@ -570,9 +585,32 @@ function drawDashLine(cxt, y){
 }
 */
 
+function genRandomSleepData(num){
+    var lowBound = 360; //minutes
+    var highBound = 500; //minutes
+    var sleepNumArray = new Array(num);
+
+    for (var i=0; i<num; i++)
+    {
+        var sleepNum = lowBound + Math.random()*(highBound - lowBound);
+        sleepNumArray[i] = parseInt(sleepNum, 10);
+    }
+
+    return sleepNumArray;
+}
+
 function drawSleepChart(cxt){
+    var barColor = "#DCCFE9";
+    var circleColor = "#705393";
+//    var barWidth = 9;
+    var barInterval = 16;
+    var barStartX = 130;
+    var barMaxY = 910;
+    var barBaseY = 1040;
+
     var dayNum = getDayNum();
 
+/*
     //睡觉时间
     cxt.beginPath();
     var sleepbar = new Image();
@@ -586,29 +624,135 @@ function drawSleepChart(cxt){
         cxt.textBaseline = "top";
         cxt.fillText("平均值"+0+"小时"+"分钟",720,790);
     };
+    */
 
-    //步数直方图
+    var sleepNumArray = genRandomSleepData(dayNum);
+    var maxSleep = 0;
+    var maxSleepIndex = -1;
+    var avgSleep = 0;
+    for (var i=0; i<dayNum; i++)
+    {
+        if (sleepNumArray[i] > maxSleep){
+            maxSleep = sleepNumArray[i];
+            maxSleepIndex = i;
+        }
+        avgSleep += sleepNumArray[i];
+    }
+    avgSleep = parseInt(avgSleep / dayNum, 10);
+    var avgSleepHour = parseInt(avgSleep/60, 10);
+    var avgSleepMin = Math.round(avgSleep%60);
+    var maxSleepHour = parseInt(maxSleep/60, 10);
+    var maxSleepMin = Math.round(maxSleep%60);
+
+    //睡觉时间
     cxt.beginPath();
-    var stepsAxis = new Image();
-    stepsAxis.src = "./images/xaxis.png";
-    stepsAxis.onload = function(){
-        cxt.drawImage(stepsAxis, 0, 1039);
+    var sleepsBar = new Image();
+    sleepsBar.src = "./images/sleepbar.png";
+    sleepsBar.onload = function(){
+        cxt.drawImage(sleepsBar, 0, 768);
+//    cxt.font ="lighter 22px _H_HelveticaNeue"; // iOS
+        cxt.font ="28px STHeitiSC-Light";  //TODO
+        cxt.fillStyle = "rgb(82,82,82)";
+        cxt.textAlign = "right";
+        cxt.textBaseline = "top";
+        cxt.fillText("平均值"+avgSleepHour+"小时"+avgSleepMin+"分钟",720,790);
     };
 
+
+    //睡眠直方图
+    cxt.beginPath();
+    var sleepsAxis = new Image();
+    sleepsAxis.src = "./images/xaxis.png";
+    sleepsAxis.onload = function(){
+        cxt.drawImage(sleepsAxis, 0, 1039);
+    };
+
+    cxt.beginPath();
+    cxt.lineWidth = 1;
+    cxt.strokeStyle = barColor;
+    cxt.moveTo(barStartX, barBaseY);
+    
+    for (var i=0; i<dayNum; i++)
+    {
+        var realStartX = barStartX+barInterval*i
+        var realHeight = (sleepNumArray[i] / maxSleep) * (barBaseY - barMaxY);
+        realHeight = parseInt(realHeight, 10);
+//        cxt.rect(realStartX, barBaseY - realHeight, barWidth, realHeight);
+        if(i==0){
+            cxt.lineWidth = 1;
+            cxt.strokeStyle = barColor;
+        }else{
+            cxt.lineWidth = 3;
+            cxt.strokeStyle = circleColor;
+        }
+//        cxt.beginPath();
+        cxt.lineTo(realStartX, barBaseY - realHeight);
+        cxt.stroke();
+    }
+    cxt.lineWidth = 1;
+    cxt.strokeStyle = barColor;
+    cxt.lineTo(barStartX + (dayNum-1)*barInterval, barBaseY);
+    cxt.stroke();
+
+    cxt.closePath();
+    cxt.fillStyle = barColor;
+    cxt.fill();
+
+    //纵向虚线
     for (var i=0; i<dayNum; i++)
     {
         genVerticalDashline(cxt, i);
     }
+
+    //平均的虚线
+    var dashLineY = barBaseY - (avgSleep / maxSleep) * (barBaseY - barMaxY);
+    drawDashLine(cxt, dashLineY);
+
+    for (var i=0; i<dayNum; i++)
+    {
+        cxt.beginPath();
+        var realStartX = barStartX+barInterval*i
+        var realHeight = (sleepNumArray[i] / maxSleep) * (barBaseY - barMaxY);
+        realHeight = parseInt(realHeight, 10);
+
+        cxt.arc(realStartX - 1, barBaseY - realHeight, 4, 0, Math.PI*2, false);
+        cxt.fillStyle = "#FFFFFF";
+        cxt.fill();
+        cxt.arc(realStartX - 1, barBaseY - realHeight, 5, 0, Math.PI*2, false);
+        cxt.lineWidth = 2;
+        cxt.strokeStyle = circleColor;
+        cxt.stroke();
+    }
+
+    //睡觉最大值的小圆圈
+    cxt.beginPath();
+    cxt.arc(barStartX + maxSleepIndex*barInterval - 1, barMaxY, 5, 0, Math.PI*2, false);
+    cxt.fillStyle = circleColor;
+    cxt.fill();
+    
+    //睡觉最大值
+    cxt.beginPath();
+    cxt.font ="24px STHeitiSC-Light";  //TODO
+    cxt.fillStyle = "rgb(82,82,82)";
+    cxt.textAlign = "left";
+    cxt.textBaseline = "top";
+    cxt.fillText(maxSleepHour+"小时"+maxSleepMin+"分钟",barStartX + maxSleepIndex*barInterval - 40,875);
 }
+
 function genVerticalDashline(cxt,i){
     var beginX=130;
-    var Y=910;
+    var baseY=1039;
+    var endY=910;
     var width=16;
-    var line = new Image();
-    line.src = "./images/verticaldashline.png";
-    line.onload = function(){
-        cxt.drawImage(line, beginX+i*width, Y);
-    };
+    var dashInterval=3;
+    var dashLength=2;
+    for(var y=baseY;y>endY;y=y-dashInterval){
+        cxt.beginPath();
+        cxt.strokeStyle = "rgb(171,171,171)";
+        cxt.moveTo(beginX+i*width, y);
+        cxt.lineTo(beginX+i*width, y-dashLength);
+        cxt.stroke();
+    }
 }
 
 

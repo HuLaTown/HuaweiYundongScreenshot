@@ -80,16 +80,6 @@
     transition:0.2s ease;
 
 }
-#makeUpBtn:hover{
-    color: darkblue;
-    -webkit-transform: rotate(360deg) scale(1.8);
-    -moz-transform: rotate(360deg) scale(1.8);
-    -ms-transform: rotate(360deg) scale(1.8);
-    -o-transform: rotate(360deg) scale(1.8);
-    transform: rotate(360deg) scale(1.8);
-
-
-}
 #produce{
     clear: both;
     border-top:2px solid #576361;
