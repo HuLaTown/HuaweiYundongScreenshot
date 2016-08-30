@@ -4,7 +4,7 @@
 
 #header{
     width: 100%;
-    height:300px;
+
     text-align: center;
 
     /*background: #00FF00 url(images/bg.jpg) no-repeat fixed top;*/
@@ -21,6 +21,8 @@
 #headerText a{font-family: "微软雅黑";font-size: 20px;font-style: normal;}
 
 #input{
+    float: left;
+    width: 100%;
     font-family: "微软雅黑";font-size: 15px;font-style: normal;
 
 }
@@ -46,8 +48,6 @@
     font-family: "微软雅黑";font-size: 15px;font-style: normal;
 }
 #input .generate{
-    width: 20%;
-    float: right;
     height: 650px;
     border-left: 2px solid #576361;
     font-family: "微软雅黑";font-size: 15px;font-style: normal;
@@ -67,11 +67,9 @@
 }
 #makeUpBtn{
     width:100px;
-    height: 250px;
-    background-color: navajowhite;
-    margin-left: 106px;
-    margin-top: 100px;
-    border-radius:20px;
+    height: 50px;
+    background-color: lightblue;
+    border-radius:10px;
 
     -webkit-transition: 0.2s ease;
     -moz-transition: 0.2s ease;

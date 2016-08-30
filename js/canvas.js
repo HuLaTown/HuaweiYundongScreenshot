@@ -678,13 +678,7 @@ function drawSleepChart(cxt){
         var realHeight = (sleepNumArray[i] / maxSleep) * (barBaseY - barMaxY);
         realHeight = parseInt(realHeight, 10);
 //        cxt.rect(realStartX, barBaseY - realHeight, barWidth, realHeight);
-        if(i==0){
-            cxt.lineWidth = 1;
-            cxt.strokeStyle = barColor;
-        }else{
-            cxt.lineWidth = 3;
-            cxt.strokeStyle = circleColor;
-        }
+
 //        cxt.beginPath();
         cxt.lineTo(realStartX, barBaseY - realHeight);
         cxt.stroke();
@@ -708,6 +702,27 @@ function drawSleepChart(cxt){
     var dashLineY = barBaseY - (avgSleep / maxSleep) * (barBaseY - barMaxY);
     drawDashLine(cxt, dashLineY);
 
+    //睡觉圆圈之间的粗线
+    cxt.beginPath();
+    cxt.lineWidth = 3;
+    cxt.strokeStyle = circleColor;
+    var X0 = barStartX;
+    var Y0 = barBaseY - (sleepNumArray[0] / maxSleep) * (barBaseY - barMaxY);
+    Y0 = parseInt(Y0, 10);
+
+    cxt.moveTo(X0, Y0);
+    for (var i=1; i<dayNum; i++)
+    {
+        var realStartX = barStartX+barInterval*i
+        var realHeight = (sleepNumArray[i] / maxSleep) * (barBaseY - barMaxY);
+        realHeight = parseInt(realHeight, 10);
+        cxt.lineWidth = 3;
+        cxt.strokeStyle = circleColor;
+        cxt.lineTo(realStartX, barBaseY - realHeight);
+        cxt.stroke();
+    }
+
+    //睡觉每天的圆圈
     for (var i=0; i<dayNum; i++)
     {
         cxt.beginPath();
@@ -724,7 +739,7 @@ function drawSleepChart(cxt){
         cxt.stroke();
     }
 
-    //睡觉最大值的小圆圈
+    //睡觉最大值的圆圈
     cxt.beginPath();
     cxt.arc(barStartX + maxSleepIndex*barInterval - 1, barMaxY, 5, 0, Math.PI*2, false);
     cxt.fillStyle = circleColor;
@@ -737,6 +752,8 @@ function drawSleepChart(cxt){
     cxt.textAlign = "left";
     cxt.textBaseline = "top";
     cxt.fillText(maxSleepHour+"小时"+maxSleepMin+"分钟",barStartX + maxSleepIndex*barInterval - 40,875);
+
+
 }
 
 function genVerticalDashline(cxt,i){
